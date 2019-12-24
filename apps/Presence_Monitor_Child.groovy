@@ -27,7 +27,7 @@ def prefSettings() {
     return dynamicPage(name: "prefSettings", title: "", install: true, uninstall: true) {
 		section("Always Accurate For Present") {
 			paragraph "The device chosen for this setting is always accurate when it says you are present but may not be accurate when it says not present (for example Wifi Phone Sensors)"
-			input "alwaysPresent", "capability.presenceSensor", title: "Presence Sensors for Accurate Present", multiple:false, required:false
+			input "alwaysPresent", "capability.presenceSensor", title: "Presence Sensors for Accurate Present", multiple:true, required:false
 		}
 		section("Accurate When Combined For Present") {
 			paragraph "When the specified number of devices chosen for this setting say present, assume you are present"
