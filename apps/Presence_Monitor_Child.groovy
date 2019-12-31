@@ -38,6 +38,7 @@ def prefSettings() {
 			paragraph "When the specified number of devices chosen for this setting say not present, assume you are not present"
 			input "combinedNotPresent", "capability.presenceSensor", title: "Presence Sensors for Combined Not Present", multiple:true, required:false
             input "combinedNotPresentCount", "number", title: "How many must show not present?", required: false, defaultValue: 1
+			input "combinedPresenceDelay", "number", title: "Only report a departure if the device(s) stay not present for the specified number of minutes", required: false, defaultValue: 0
 		}
         section("General") {
             input("debugOutput", "bool", title: "Enable debug logging?", defaultValue: true, displayDuringSetup: false, required: false)
@@ -75,6 +76,7 @@ def initialize() {
 
 def trustArrivalHandler(evt) {
 	def device = getChildDevice(state.presenceDevice)
+	state.departTime = -1
 	device.arrived()
 	logDebug "trusted arrival detected"
 }
@@ -93,6 +95,7 @@ def combinedArrivalHandler(evt) {
 	}
     if (totalPresent >= combinedPresentCount) 
     {
+		state.departTime = -1
         logDebug "Threshold hit, setting proxy to present"
 		device.arrived()
     }
@@ -114,11 +117,31 @@ def combinedDepartureHandler(evt) {
 	}
 	if (totalNotPresent >= combinedNotPresentCount)
     {
-        logDebug "Threshold hit, setting proxy to not present"
-		device.departed()
+		if (combinedPresenceDelay > 0)
+		{
+			state.departTime = now()
+			logDebug "Threshold hit, setting departure delay"
+			runIn(combinedPresenceDelay*60, departureAfterDelay)
+		}
+		else
+		{
+			logDebug "Threshold hit, setting proxy to not present"
+			device.departed()
+		}
     }
 	else
 		logDebug "Departure occurred but threshold was not reached ${totalNotPresent} < ${combinedNotPresentCount}"
+}
+
+def departureAfterDelay() {
+	if (state.departTime != -1 && now() - state.departTime > (combinedPresenceDelay*60)-10000)
+	{
+		def device = getChildDevice(state.presenceDevice)
+		logDebug "Departure delay timer hit, setting proxy to not present"
+		device.departed()
+	}
+	else
+		logDebug "Departure delay hit but no longer departed, cancelled"
 }
 
 def createOrUpdateChildDevice() {
