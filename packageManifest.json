@@ -1,0 +1,23 @@
+{
+	"packageName": "Presence Monitor",
+	"minimumHEVersion": "2.1.9",
+	"author": "Dominick Meglio",
+	"version": "1.0",
+	"dateReleased": "2020-04-08",
+	"apps" : [
+		{
+			"id" : "214069ec-3791-45cd-baf2-4053fe41bc4f",
+			"name": "Presence Monitor",
+			"namespace": "dcm.presence",
+			"location": "https://raw.githubusercontent.com/dcmeglio/hubitat-presencemonitor/master/apps/Presence_Monitor.groovy",
+			"required": true
+		},
+		{
+			"id" : "978660d8-8cc3-4832-8293-275f46954b44",
+			"name": "Presence Monitor Child",
+			"namespace": "dcm.presence",
+			"location": "https://raw.githubusercontent.com/dcmeglio/hubitat-presencemonitor/master/apps/Presence_Monitor_Child.groovy",
+			"required": true
+		}
+	]
+}
