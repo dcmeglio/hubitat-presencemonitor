@@ -11,7 +11,8 @@
 			"name": "Presence Monitor",
 			"namespace": "dcm.presence",
 			"location": "https://raw.githubusercontent.com/dcmeglio/hubitat-presencemonitor/master/apps/Presence_Monitor.groovy",
-			"required": true
+			"required": true,
+			"primary": true
 		},
 		{
 			"id" : "978660d8-8cc3-4832-8293-275f46954b44",
